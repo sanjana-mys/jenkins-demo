@@ -26,17 +26,17 @@ pipeline {
         }
     }
 
-   post {
+  post {
     success {
         slackSend(
-            message: "✅ Build SUCCESS",
-            webhookUrl: credentials('slack-webhook')
+            webhookUrl: credentials('slack-webhook'),
+            message: "🚀 Build SUCCESS from Jenkins"
         )
     }
     failure {
         slackSend(
-            message: "❌ Build FAILED",
-            webhookUrl: credentials('slack-webhook')
+            webhookUrl: credentials('slack-webhook'),
+            message: "❌ Build FAILED from Jenkins"
         )
     }
 }
