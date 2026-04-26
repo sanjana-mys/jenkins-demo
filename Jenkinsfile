@@ -9,24 +9,34 @@ pipeline {
 
         stage('CHECKOUT') {
             steps {
-                git 'PASTE_YOUR_GITHUB_REPO_LINK_HERE'
+                git 'https://github.com/sanjana-mys/jenkins-demo.git'
             }
         }
 
         stage('Build') {
             steps {
-                dir('demo') {
-                    bat 'mvn clean install'
-                }
+                bat 'mvn clean install'
             }
         }
 
         stage('Test') {
             steps {
-                dir('demo') {
-                    bat 'mvn test'
-                }
+                bat 'mvn test'
             }
         }
+    }
+
+   post {
+    success {
+        slackSend(
+            message: "✅ Build SUCCESS",
+            webhookUrl: credentials('slack-webhook')
+        )
+    }
+    failure {
+        slackSend(
+            message: "❌ Build FAILED",
+            webhookUrl: credentials('slack-webhook')
+        )
     }
 }
