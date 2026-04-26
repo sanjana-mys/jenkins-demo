@@ -28,15 +28,17 @@ pipeline {
 
   post {
     success {
-        slackSend(
-            webhookUrl: credentials('slack-webhook'),
-            message: "🚀 Build SUCCESS from Jenkins"
-        )
+        withCredentials([string(credentialsId: 'slack-webhook', variable: 'WEBHOOK')]) {
+            bat '''
+            curl -X POST -H "Content-type: application/json" --data "{\\"text\\":\\"🚀 Jenkins Build SUCCESS\\"}" %WEBHOOK%
+            '''
+        }
     }
     failure {
-        slackSend(
-            webhookUrl: credentials('slack-webhook'),
-            message: "❌ Build FAILED from Jenkins"
-        )
+        withCredentials([string(credentialsId: 'slack-webhook', variable: 'WEBHOOK')]) {
+            bat '''
+            curl -X POST -H "Content-type: application/json" --data "{\\"text\\":\\"❌ Jenkins Build FAILED\\"}" %WEBHOOK%
+            '''
+        }
     }
 }
